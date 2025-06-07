@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Documentation - Canvas of Babel</title>
+    <!-- The new "Dark Matter Manuscript" stylesheet -->
+    <link rel="stylesheet" href="doc_style.css">
+    
+    <!-- Google Fonts for the theme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Sticky Sidebar Navigation -->
+        <nav class="sidebar-nav">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#architecture">2. System Architecture</a></li>
+                <li><a href="#engine-deep-dive">3. Engine Deep Dive</a>
+                    <ul>
+                        <li><a href="#engine-prng">3.1 PRNG & Hashing</a></li>
+                        <li><a href="#engine-pipeline">3.2 Generation Pipeline</a></li>
+                        <li><a href="#engine-cover">3.3 SVG Filter Breakdown</a></li>
+                    </ul>
+                </li>
+                <li><a href="#application-flow">4. Application Flow</a>
+                    <ul>
+                        <li><a href="#flow-browsing">4.1 Browsing</a></li>
+                        <li><a href="#flow-searching">4.2 The Search Illusion</a></li>
+                    </ul>
+                </li>
+                <li><a href="#performance">5. Performance & Optimization</a></li>
+                <li><a href="#security">6. Security Considerations</a></li>
+                <li><a href="#api-reference">7. API Reference</a></li>
+                <li><a href="#customization">8. Customization Roadmap</a></li>
+            </ul>
+            <a href="index.html" class="button-style back-link">← Back to Canvas</a>
+        </nav>
+
+        <!-- Main Documentation Content -->
+        <main class="doc-content">
+            <header class="doc-header">
+                <h1>Canvas of Babel</h1>
+                <h2>Definitive Technical Documentation</h2>
+            </header>
+
+            <article>
+                <section id="introduction">
+                    <h3>1. Introduction & Philosophy</h3>
+                    <p>This document provides a comprehensive technical overview of the Canvas of Babel web application. The project's guiding principle is the simulation of an infinite, persistent universe through <strong>deterministic procedural generation</strong>. This methodology allows for an apparently limitless collection of unique visual artifacts without any server-side database, relying instead on mathematical consistency.</p>
+                    <p>The architectural goal is a robust, client-only Single Page Application (SPA) that is performant, secure, and extensible, presented with a "Dark Matter Gallery" aesthetic that emphasizes the mysterious and infinite nature of the content.</p>
+                </section>
+
+                <section id="architecture">
+                    <h3>2. System Architecture</h3>
+                    <p>The application employs a state-driven, event-based model. All user interactions trigger actions that manipulate a central <code>state</code> object. The UI is then re-rendered based on this new state, creating a predictable, unidirectional data flow. This architecture minimizes side effects and simplifies debugging.</p>
+                    <div class="diagram-container">
+                        <h4>Application Data Flow Diagram</h4>
+                        <svg width="100%" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                            <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>
+                            <!-- Groups -->
+                            <g class="box-group" id="group-interaction">
+                                <rect class="group-rect" x="25" y="150" width="200" height="150" /><text class="group-text" x="125" y="140">User Interaction</text>
+                                <g class="box"><rect x="50" y="175" width="150" height="50" /><text x="125" y="205">Event Listeners</text></g>
+                                <g class="box"><rect x="50" y="240" width="150" height="50" /><text x="125" y="270">(`init` function)</text></g>
+                            </g>
+                            <g class="box-group" id="group-logic">
+                                <rect class="group-rect" x="275" y="50" width="250" height="350" /><text class="group-text" x="400" y="40">Application Logic (`script.js`)</text>
+                                <g class="box"><rect x="300" y="75" width="200" height="50" /><text x="400" y="105">Actions</text></g>
+                                <g class="box"><rect x="300" y="175" width="200" height="50" /><text x="400" y="205">State Object</text></g>
+                                <g class="box"><rect x="300" y="275" width="200" height="50" /><text x="400" y="305">Engine (PRNG)</text></g>
+                            </g>
+                            <g class="box-group" id="group-rendering">
+                                <rect class="group-rect" x="575" y="150" width="200" height="150" /><text class="group-text" x="675" y="140">Rendering</text>
+                                <g class="box"><rect x="600" y="175" width="150" height="50" /><text x="675" y="205">View Manager</text></g>
+                                <g class="box"><rect x="600" y="240" width="150" height="50" /><text x="675" y="270">(DOM Update)</text></g>
+                            </g>
+                            <!-- Arrows and Labels -->
+                            <g class="arrow"><path d="M 225 200 H 300 V 125" marker-end="url(#arrow)" /><text x="260" y="185">1. Trigger Action</text></g>
+                            <g class="arrow"><path d="M 400 125 V 175" marker-end="url(#arrow)" /><text x="410" y="155">2. Mutate State</text></g>
+                            <g class="arrow"><path d="M 400 225 V 275" marker-end="url(#arrow)" /><text x="410" y="255">3. Request Content</text></g>
+                            <g class="arrow"><path d="M 400 325 C 250 325, 250 100, 400 75" marker-end="url(#arrow)" /><text x="260" y="90">4. Return Content</text></g>
+                            <g class="arrow"><path d="M 500 100 H 650 C 675 100, 675 175, 675 175" marker-end="url(#arrow)" /><text x="520" y="85">5. Render View</text></g>
+                        </svg>
+                    </div>
+                </section>
+                
+                <section id="engine-deep-dive">
+                    <h3>3. Engine Deep Dive</h3>
+                    <p>The <code>engine</code> object is the mathematical and creative core of the library, responsible for all procedural generation.</p>
+
+                    <h4 id="engine-prng">3.1 PRNG & Hashing</h4>
+                    <p>At the lowest level, two functions are critical: <code>cyrb53</code> for hashing string addresses into numerical seeds, and <code>mulberry32</code>, a Pseudo-Random Number Generator that produces a deterministic sequence from a given seed. This pairing is fundamental to the library's consistency.</p>
+                    
+                    <h4 id="engine-pipeline">3.2 Generation Pipeline</h4>
+                    <p>Every piece of generated content follows a strict pipeline to ensure reproducibility. For an SVG image, the process is:</p>
+                    <ol>
+                        <li>A canonical address string is created from the location: <code>sector-id:canvas-index</code>.</li>
+                        <li>This string is hashed into a unique numerical seed using <code>cyrb53</code>.</li>
+                        <li>The seed initializes a <code>mulberry32</code> PRNG instance.</li>
+                        <li>The sequence of numbers from the PRNG is used to determine every parameter of the SVG: colors, filter attributes (like `baseFrequency`), blend modes, and more.</li>
+                    </ol>
+
+                    <h4 id="engine-cover">3.3 SVG Filter Breakdown</h4>
+                    <p>The procedural images are generated using a robust, multi-layered SVG filter chain. This avoids browser compatibility issues while creating complex visuals.</p>
+                </section>
+                
+                <section id="application-flow">
+                    <h3>4. Application Flow</h3>
+                    
+                    <h4 id="flow-browsing">4.1 Browsing</h4>
+                    <p>A typical browsing session follows a clear, hierarchical path, with each step rendering the next view and attaching new event listeners. This ensures the application state is always synchronized with the user's location in the library.</p>
+
+                    <h4 id="flow-searching">4.2 The Search Illusion</h4>
+                    <p>When a user uploads an image, the application does not search for it; it **creates a location for it**. This is the core "illusion" of the Canvas of Babel.</p>
+                     <ol>
+                        <li>The image is read into a Base64 data string using `FileReader`.</li>
+                        <li>This long string is hashed by `engine.cyrb53()` to create a single, unique numerical seed.</li>
+                        <li>This seed powers a new PRNG instance, which deterministically generates a very long Sector ID and a Canvas Index.</li>
+                        <li>The modal is opened for this generated address. Instead of rendering a procedural SVG, it renders an `<img>` tag with the image's Base64 data as its source.</li>
+                    </ol>
+                </section>
+
+                <section id="performance">
+                    <h3>5. Performance & Optimization</h3>
+                    <p>Despite simulating an infinite system, the application is designed to be lightweight and performant on the client-side.</p>
+                    <ul>
+                        <li><strong>On-Demand Generation:</strong> Nothing is generated until it is requested. Only the thumbnails for the current sector are rendered at once.</li>
+                        <li><strong>Efficient DOM Updates:</strong> Document fragments are used when populating the canvas grid to minimize reflows and repaints, ensuring a smooth experience even when rendering 1,000 thumbnails.</li>
+                        <li><strong>Safe State Management:</strong> By not caching view-specific DOM elements globally, we prevent errors that occur when trying to access an element that hasn't been rendered yet.</li>
+                    </ul>
+                </section>
+
+                <section id="security">
+                    <h3>6. Security Considerations</h3>
+                    <p>The client-only architecture provides inherent security benefits.</p>
+                    <ul>
+                        <li><strong>No Server-Side Vulnerabilities:</strong> The application is immune to common backend vulnerabilities as it has no server component.</li>
+                        <li><strong>Safe File Handling:</strong> User-uploaded images are handled entirely client-side with `FileReader`. They are never uploaded to a server, eliminating privacy concerns and upload-related attack vectors.</li>
+                        <li><strong>Sandboxed Storage:</strong> All bookmarked data is stored in the browser's `localStorage`, which is sandboxed to the site's origin and cannot be accessed by other websites.</li>
+                    </ul>
+                </section>
+
+                <section id="api-reference">
+                    <h3>7. API Reference (Key Functions)</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Function</th><th>Parameters</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>viewManager.switch(viewId)</code></td>
+                                <td><code>viewId</code> (string)</td>
+                                <td>The primary function for changing the active view. Hides all other views.</td>
+                            </tr>
+                            <tr>
+                                <td><code>actions.navigateToBook(loc, page, sourceView)</code></td>
+                                <td><code>loc</code> (object), <code>page</code> (number), <code>sourceView</code> (string|null)</td>
+                                <td>Switches to the book reader and renders the specified book at the given page. `sourceView` helps the back button work correctly.</td>
+                            </tr>
+                             <tr>
+                                <td><code>engine.generateSVG(seed)</code></td>
+                                <td><code>seed</code> (number)</td>
+                                <td>Generates and returns the full SVG markup string for a unique procedural image based on the input seed.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="customization">
+                    <h3>8. Customization & Future Development</h3>
+                    <p>The application is designed for extension. Key areas for customization include:</p>
+                    <ul>
+                        <li><strong>Aesthetics:</strong> All colors and fonts are controlled by CSS variables in <code>style.css</code>.</li>
+                        <li><strong>Generation Logic:</strong> The <code>engine.generateSVG()</code> function can be modified to produce entirely new art styles. Experiment with different SVG filters or even render to a `<canvas>` element for pixel-based art.</li>
+                        <li><strong>Future Roadmap:</strong> Potential features include adding more advanced SVG filters (e.g., `<feConvolveMatrix>` for sharpening/blurring effects), implementing a "related canvases" feature based on seed proximity, or creating a gallery of bookmarked images.</li>
+                    </ul>
+                </section>
+            </article>
+        </main>
+        <footer>Made by Abhinit Barua. Inspired by <a href="babelia.libraryofbabel.info/">Babelia (Canvas of Babel)</a></footer>
+    </div>
+    <script src="doc_script.js"></script>
+</body>
+</html>

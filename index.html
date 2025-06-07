@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Canvas of Babel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app-container">
+        <header class="app-header">
+            <h1>Canvas of Babel</h1>
+            <nav class="main-nav">
+                <button id="random-sector-btn">Random Sector</button>
+                <a href="documentation.html" class="button-style">Documentation</a>
+            </nav>
+        </header>
+
+        <main id="view-container" class="active">
+            <div class="browse-panel">
+                <div class="controls">
+                    <input type="text" id="sector-input" placeholder="Enter Sector ID...">
+                    <button id="go-btn">Go</button>
+                </div>
+                <div id="canvas-grid">
+                    <!-- Canvas thumbnails will be generated here -->
+                </div>
+                <div id="sector-info">Welcome to the Canvas. Enter a Sector ID to begin.</div>
+            </div>
+            <div class="search-panel">
+                <h2>Search the Canvas</h2>
+                <div id="image-drop-zone">
+                    <p>Drop an image file here or click to upload</p>
+                    <input type="file" id="image-upload-input" accept="image/png, image/jpeg, image/gif" hidden>
+                </div>
+            </div>
+        </main>
+
+        <div id="modal-container" class="hidden">
+            <div id="modal-content">
+                <button id="modal-close-btn" title="Close">×</button>
+                <div id="modal-canvas-view"></div>
+                <div id="modal-canvas-info">
+                    <p id="canvas-id-display"></p>
+                    <div class="button-group">
+                        <button id="bookmark-btn">Bookmark</button>
+                        <button id="copy-link-btn">Copy Link</button>
+                        <button id="download-btn">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="system-overlay" class="hidden">
+            <p id="system-text"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
